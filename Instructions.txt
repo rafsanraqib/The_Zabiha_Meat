@@ -1,0 +1,20 @@
+Step 1:
+Install Nodejs in your system. Google download Nodejs
+
+Step2:
+Type node --version in terminal(powershell in windows,commad prompt is fine) check whether it returns v12.6.0
+
+Type npm --version in terminal check if it is v6.9.0
+
+Step3:
+Change to project directory in terminal
+
+Step 4:
+Type npm install --save bootstrap react-html-table-excel in terminal 
+
+Step 5:
+Type npm start terminal to run the program 
+
+
+**Note
+Every time you enter a new record a new excel file gets downloaded with the same name. Next version I will try to have all records append to an existing excel file. 
