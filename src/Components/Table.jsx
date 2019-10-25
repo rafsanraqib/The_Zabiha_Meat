@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import ReactToExcel from "react-html-table-to-excel";
+// import { currentOrdersList } from "./Properties.js";
 class Table extends Component {
   state = {};
+
   render() {
     return (
       <div className="container">
@@ -18,18 +20,20 @@ class Table extends Component {
               <th>Weights CSV</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>{this.props.customerName}</td>
-              <td>{this.props.supplierName}</td>
-              <td>{this.props.meatType}</td>
-              <td>{this.props.totalWeight}</td>
-              <td>{this.props.pricePerPound}</td>
-              <td>{this.props.totalCost}</td>
-              <td>{this.props.processingFee}</td>
-              <td>{this.props.weights}</td>
-            </tr>
-          </tbody>
+          {this.props.ordersRecord.map(item => (
+            <tbody key={Math.random().toString(36)}>
+              <tr>
+                <td>{item.customerName}</td>
+                <td>{item.supplierName}</td>
+                <td>{item.meatType}</td>
+                <td>{item.totalWeight}</td>
+                <td>{item.pricePerPound}</td>
+                <td>{item.totalCost}</td>
+                <td>{item.processingFee}</td>
+                <td>{item.weightsCSV}</td>
+              </tr>
+            </tbody>
+          ))}
         </table>
         <ReactToExcel
           className="btn btn-primary"

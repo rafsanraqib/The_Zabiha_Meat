@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import Dropbox from "./Components/Dropbox.jsx";
 import Table from "./Components/Table";
-
 import {
   pricePerPound,
   meatType,
+  currentOrdersList,
   supplierName,
   marketName,
   deliveryFee
@@ -26,16 +26,17 @@ class App extends Component {
   // Function that does the heavy lifting by calling multiple sub functions
   handleCalculations = () => {
     const weightArray = this.setWeightArray();
-    const totalCost = this.calculateTotalCost(weightArray);
-    // Bad Idea to compare with "Y" need to change this
-    if (totalCost[0] === "Y") {
-      console.log(totalCost);
+    const returnedArray = this.calculateTotalCost(weightArray);
+    // Bad Idea to compare with "I" need to change this
+    if (returnedArray[0] === "I") {
+      alert(returnedArray)
       return;
     }
     const processingFee = this.calculateProcessingFee(weightArray);
     const date = this.setDate();
-    const reciept = this.createReciept(date, totalCost, processingFee);
-    console.log(reciept);
+    const reciept = this.createReciept(date, returnedArray, processingFee);
+    console.log(reciept)
+    this.createOrder(date, returnedArray, processingFee);
   };
 
   setMarketName = marketName => {
@@ -55,8 +56,7 @@ class App extends Component {
     const weightValuesArray = this.state.weightValues.split(",");
     this.setState({ weightArray: weightValuesArray });
     return weightValuesArray;
-  };
-
+  };  
   calculateTotalCost = weightArray => {
     let weightSum = 0;
     for (var i = 0; i < weightArray.length; i++) {
@@ -65,17 +65,14 @@ class App extends Component {
     this.setState({ weightSum });
     var newlst = pricePerPound.filter(item => {
       return (
-        item.Meat === this.state.meatType &&
-        item.Market === this.state.marketNameString
+        item.Meat === this.state.meatType
       );
     });
     if (newlst.length === 0) {
       var message =
-        "You do not sell " +
+        "I havent added the price per pound of " +
         this.state.meatType +
-        " to " +
-        this.state.marketNameString +
-        "\nYou can add new item in the properties.js file in the price per pound array\n";
+        "\nYou can update it in the properties.js file in the pricePerPound array\n";
       return message;
     }
     const price = newlst[0].cost;
@@ -83,7 +80,7 @@ class App extends Component {
     var totalCost = price * weightSum;
     totalCost.toFixed(2);
     this.setState({ totalCost });
-    return totalCost;
+    return {totalCost,price,weightSum};
   };
 
   calculateProcessingFee = weightArray => {
@@ -113,7 +110,11 @@ class App extends Component {
     return today;
   };
 
-  createReciept = (currentDate, totalCost, processingFee) => {
+  createOrder = (currentDate, returnedArray, processingFee) =>{
+    var tempList = {customerName: this.state.marketNameString,supplierName: this.state.supplierName,meatType: this.state.meatType,totalWeight:returnedArray.weightSum,pricePerPound: returnedArray.price,totalCost:returnedArray.totalCost,processingFee:processingFee,weightsCSV: this.state.weightValues}
+    currentOrdersList.push(tempList);
+  }
+  createReciept = (currentDate, returnedArray, processingFee) => {
     var reciept =
       "Date: " +
       currentDate +
@@ -128,7 +129,7 @@ class App extends Component {
       this.state.supplierName +
       "\n" +
       "Total Cost: $" +
-      totalCost.toFixed(2) +
+      returnedArray.totalCost.toFixed(2) +
       "\n" +
       "Processing fee: $" +
       processingFee.toFixed(2) +
@@ -156,15 +157,8 @@ class App extends Component {
         </div>
         <br></br>
         <div className="container">
-          <Table
-            customerName={this.state.marketNameString}
-            supplierName={this.state.supplierName}
-            meatType={this.state.meatType}
-            totalWeight={this.state.weightSum}
-            pricePerPound={this.state.price}
-            totalCost={this.state.totalCost}
-            processingFee={this.state.processingFee}
-            weights={this.state.weightValues}
+          <Table key = {Math.random().toString(36)}
+            ordersRecord = {currentOrdersList}
           ></Table>
         </div>
       </div>
