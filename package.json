@@ -8,7 +8,7 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-html-table-to-excel": "^2.0.0",
-    "react-native": "^0.61.2",
+    "react-native": "^0.62.3",
     "react-native-popup-menu": "^0.15.6",
     "react-scripts": "3.2.0"
   },
